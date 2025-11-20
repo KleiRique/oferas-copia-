@@ -50,12 +50,13 @@ export interface ProductOffer {
 export interface SupermarketResult {
   id: string;
   name: string;
-  badgeType: 'CHEAP' | 'MEDIUM' | 'EXPENSIVE';
-  badgeText: string;
-  savings: string;
+  badgeType?: 'CHEAP' | 'MEDIUM' | 'EXPENSIVE';
+  badgeText?: string;
+  savings?: string;
   validity?: string;
   products: ProductOffer[];
   link?: string;
+  isLoading?: boolean; // New field for UI state
 }
 
 export interface GroundingSource {
