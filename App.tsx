@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { SearchCard } from './components/CodeInput';
 import { BlogSection } from './components/BlogSection';
-import { PricingSection } from './components/PricingSection';
 import { AdsBanner } from './components/AdsBanner';
 import { Footer } from './components/Footer';
 import { CheckoutPage } from './components/CheckoutPage';
@@ -11,12 +10,14 @@ import { SubscriptionStatusPage } from './components/SubscriptionStatusPage';
 import { LoginPage } from './components/LoginPage';
 import { PartnershipPage } from './components/PartnershipPage';
 import { SearchResultsPage } from './components/SearchResultsPage';
+import { GoogleIntegrationPage } from './components/GoogleIntegrationPage';
 import { LegalPage, LegalPageContent } from './components/LegalPage';
+import { GoogleLoginCTA } from './components/GoogleLoginCTA';
 import { Check, Shield, FileText, Cookie, HelpCircle, Mail, ShoppingCart } from 'lucide-react';
 import { Plan, BlogPost } from './types';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'landing' | 'checkout' | 'blog-post' | 'subscription-status' | 'login' | 'partnerships' | 'legal' | 'search-results'>('landing');
+  const [currentPage, setCurrentPage] = useState<'landing' | 'checkout' | 'blog-post' | 'subscription-status' | 'login' | 'partnerships' | 'legal' | 'search-results' | 'google-integration'>('landing');
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
   const [legalContent, setLegalContent] = useState<LegalPageContent | null>(null);
@@ -194,6 +195,11 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  const handleGoogleLogin = () => {
+    setCurrentPage('google-integration');
+    window.scrollTo(0, 0);
+  };
+
   const handleAccountClick = () => {
     if (isLoggedIn) {
       // If logged in but no plan selected, mock a free plan for display
@@ -229,7 +235,7 @@ export default function App() {
       {/* Header is hidden on specific full-screen pages like Login or Status to focus attention, 
           but shown on others.
       */}
-      {currentPage !== 'login' && currentPage !== 'subscription-status' && (
+      {currentPage !== 'login' && currentPage !== 'subscription-status' && currentPage !== 'google-integration' && (
         <Header onLogin={handleLoginClick} onAccount={handleAccountClick} />
       )}
 
@@ -268,14 +274,14 @@ export default function App() {
             </div>
           </section>
 
-          {/* Pricing Section */}
-          <PricingSection onSelectPlan={handleSelectPlan} />
-
-          {/* Ads Banner Section */}
-          <AdsBanner onPartnerClick={handlePartnershipClick} />
+          {/* Google Login CTA Section (Replaces Pricing) */}
+          <GoogleLoginCTA onGoogleLogin={handleGoogleLogin} />
 
           {/* Blog Section */}
           <BlogSection onReadPost={handleSelectBlogPost} />
+
+          {/* Ads Banner Section */}
+          <AdsBanner onPartnerClick={handlePartnershipClick} />
 
           {/* Footer */}
           <Footer onNavigate={handleFooterNavigate} />
@@ -290,8 +296,13 @@ export default function App() {
       {currentPage === 'login' && (
         <LoginPage 
           onLogin={handlePerformLogin}
+          onGoogleLogin={handleGoogleLogin}
           onBack={handleBackToLanding}
         />
+      )}
+
+      {currentPage === 'google-integration' && (
+        <GoogleIntegrationPage onBack={handleBackToLanding} />
       )}
 
       {currentPage === 'checkout' && selectedPlan && (
