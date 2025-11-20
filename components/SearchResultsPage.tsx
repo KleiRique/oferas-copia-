@@ -268,4 +268,72 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
                               {cat === "Mercearia" && <Coffee className="w-5 h-5 text-amber-600" />}
                               {cat === "Bebidas" && <Beer className="w-5 h-5 text-blue-500" />}
                               {cat === "Limpeza" && <Sparkles className="w-5 h-5 text-purple-500" />}
-                              {cat === "Hortifruti" && <Apple className="w-
+                              {cat === "Hortifruti" && <Apple className="w-5 h-5 text-red-500" />}
+                              <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider">{cat}</h4>
+                           </div>
+                           <div className="space-y-4 pl-2 border-l-2 border-slate-100">
+                              {groupedProducts[cat].map((prod, idx) => (
+                                <ProductRow 
+                                  key={idx}
+                                  name={prod.name}
+                                  price={prod.price}
+                                  oldPrice={prod.oldPrice}
+                                  isMedium={market.badgeType === 'MEDIUM'}
+                                  isExpensive={market.badgeType === 'EXPENSIVE'}
+                                />
+                              ))}
+                           </div>
+                        </div>
+                      )
+                    })
+                  )}
+                  {!isLoading && market.products.length === 0 && (
+                    <div className="text-center py-12 text-slate-400">
+                      <AlertCircle className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                      <p>Ofertas indisponíveis online.</p>
+                    </div>
+                  )}
+                </div>
+
+                <a 
+                  href={getMarketLink(market)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-full font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 group/btn text-base ${isLoading ? 'bg-slate-100 text-slate-400 cursor-wait' : 'bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-700'}`}
+                >
+                  <ImageIcon className="w-5 h-5" />
+                  Visualizar Folheto
+                  {!isLoading && <ExternalLink className="w-4 h-4 opacity-50 group-hover/btn:opacity-100 transition-opacity" />}
+                </a>
+              </div>
+             );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface ProductRowProps {
+  name: string;
+  price: string;
+  oldPrice?: string;
+  isMedium?: boolean;
+  isExpensive?: boolean;
+}
+
+const ProductRow: React.FC<ProductRowProps> = ({ name, price, oldPrice, isMedium, isExpensive }) => {
+  let priceColor = "text-emerald-600";
+  if (isMedium) priceColor = "text-emerald-700";
+  if (isExpensive) priceColor = "text-emerald-800";
+
+  return (
+    <div className="border-b border-slate-50 pb-3 last:border-0 last:pb-0">
+      <p className="text-base font-medium text-slate-700 mb-1 line-clamp-2 leading-snug">{name}</p>
+      <div className="flex items-baseline gap-2">
+        <span className={`font-bold text-lg ${priceColor}`}>R$ {price}</span>
+        {oldPrice && <span className="text-sm text-slate-400 line-through decoration-slate-300">R$ {oldPrice}</span>}
+      </div>
+    </div>
+  );
+}
