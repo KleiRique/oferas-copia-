@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, ShoppingCart, Store, Building2, Loader2, ExternalLink, Globe, CalendarClock, RefreshCw, AlertCircle, FileText, Image as ImageIcon, Coffee, Beer, Sparkles, Apple } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Store, Building2, Loader2, ExternalLink, CalendarClock, RefreshCw, AlertCircle, Image as ImageIcon, Coffee, Beer, Sparkles, Apple, Info } from 'lucide-react';
 import { findSupermarkets, getSupermarketDetails } from '../services/geminiService';
-import { SupermarketResult, GroundingSource, ProductOffer } from '../types';
+import { SupermarketResult, ProductOffer } from '../types';
 
 interface SearchResultsPageProps {
   searchLocation?: { state: string; city: string };
@@ -79,6 +79,8 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
     }
   }, [searchLocation]);
 
+  const isDemoMode = results.length > 0 && results[0].id.startsWith('mock');
+
   if (initialLoading) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
@@ -155,9 +157,9 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
             Comparativo em {searchLocation?.city}
           </h1>
@@ -165,6 +167,22 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
             Comparando as principais redes em tempo real
           </p>
         </div>
+
+        {isDemoMode && (
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-10 rounded-r-xl flex items-start gap-4 max-w-4xl mx-auto shadow-sm">
+            <div className="bg-blue-100 p-2 rounded-full shrink-0">
+              <Info className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <h4 className="font-bold text-blue-900 text-sm mb-1">Modo de Demonstração Visual</h4>
+              <p className="text-blue-700 text-sm leading-relaxed">
+                O servidor backend não foi detectado neste ambiente, então estamos exibindo <strong>dados simulados</strong> para você testar o design. 
+                <br className="hidden md:block"/>
+                Ao fazer o deploy na Vercel (com o arquivo <code>api/search.ts</code>), a Inteligência Artificial buscará ofertas reais.
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {results.map((market, index) => {
@@ -250,72 +268,4 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
                               {cat === "Mercearia" && <Coffee className="w-5 h-5 text-amber-600" />}
                               {cat === "Bebidas" && <Beer className="w-5 h-5 text-blue-500" />}
                               {cat === "Limpeza" && <Sparkles className="w-5 h-5 text-purple-500" />}
-                              {cat === "Hortifruti" && <Apple className="w-5 h-5 text-red-500" />}
-                              <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider">{cat}</h4>
-                           </div>
-                           <div className="space-y-4 pl-2 border-l-2 border-slate-100">
-                              {groupedProducts[cat].map((prod, idx) => (
-                                <ProductRow 
-                                  key={idx}
-                                  name={prod.name}
-                                  price={prod.price}
-                                  oldPrice={prod.oldPrice}
-                                  isMedium={market.badgeType === 'MEDIUM'}
-                                  isExpensive={market.badgeType === 'EXPENSIVE'}
-                                />
-                              ))}
-                           </div>
-                        </div>
-                      )
-                    })
-                  )}
-                  {!isLoading && market.products.length === 0 && (
-                    <div className="text-center py-12 text-slate-400">
-                      <AlertCircle className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                      <p>Ofertas indisponíveis online.</p>
-                    </div>
-                  )}
-                </div>
-
-                <a 
-                  href={getMarketLink(market)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`w-full font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 group/btn text-base ${isLoading ? 'bg-slate-100 text-slate-400 cursor-wait' : 'bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-700'}`}
-                >
-                  <ImageIcon className="w-5 h-5" />
-                  Visualizar Folheto
-                  {!isLoading && <ExternalLink className="w-4 h-4 opacity-50 group-hover/btn:opacity-100 transition-opacity" />}
-                </a>
-              </div>
-             );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-interface ProductRowProps {
-  name: string;
-  price: string;
-  oldPrice?: string;
-  isMedium?: boolean;
-  isExpensive?: boolean;
-}
-
-const ProductRow: React.FC<ProductRowProps> = ({ name, price, oldPrice, isMedium, isExpensive }) => {
-  let priceColor = "text-emerald-600";
-  if (isMedium) priceColor = "text-emerald-700";
-  if (isExpensive) priceColor = "text-emerald-800";
-
-  return (
-    <div className="border-b border-slate-50 pb-3 last:border-0 last:pb-0">
-      <p className="text-base font-medium text-slate-700 mb-1 line-clamp-2 leading-snug">{name}</p>
-      <div className="flex items-baseline gap-2">
-        <span className={`font-bold text-lg ${priceColor}`}>R$ {price}</span>
-        {oldPrice && <span className="text-sm text-slate-400 line-through decoration-slate-300">R$ {oldPrice}</span>}
-      </div>
-    </div>
-  );
-}
+                              {cat === "Hortifruti" && <Apple className="w-
