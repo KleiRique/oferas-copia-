@@ -1,3 +1,5 @@
+import React from 'react';
+
 export enum Severity {
   LOW = 'LOW',
   MEDIUM = 'MEDIUM',

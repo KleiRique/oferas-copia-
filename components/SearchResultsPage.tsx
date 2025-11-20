@@ -171,38 +171,38 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
                        <Building2 className="w-6 h-6" />}
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg text-slate-900 leading-tight">{market.name}</h3>
-                      <span className="text-xs text-slate-500">Economia média: {market.savings}</span>
+                      <h3 className="font-bold text-xl text-slate-900 leading-tight">{market.name}</h3>
+                      <span className="text-sm text-slate-500">Economia média: {market.savings}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center mb-6">
-                   <span className={`${badgeColor} text-xs font-bold px-3 py-1 rounded-full`}>
+                   <span className={`${badgeColor} text-sm font-bold px-3 py-1 rounded-full`}>
                     {market.badgeText}
                   </span>
                   {market.validity && (
-                    <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium bg-slate-50 px-2 py-1 rounded-md">
-                      <CalendarClock className="w-3 h-3" />
+                    <div className="flex items-center gap-1.5 text-sm text-slate-500 font-medium bg-slate-50 px-2 py-1 rounded-md">
+                      <CalendarClock className="w-3.5 h-3.5" />
                       {market.validity}
                     </div>
                   )}
                 </div>
 
-                <div className="space-y-6 mb-8 flex-1">
+                <div className="space-y-8 mb-8 flex-1">
                   {categoryOrder.map(cat => {
                     if (!groupedProducts[cat]) return null;
                     return (
                       <div key={cat}>
-                         <div className="flex items-center gap-2 mb-2">
-                            {cat === "Mercearia" && <Coffee className="w-4 h-4 text-amber-600" />}
-                            {cat === "Bebidas" && <Beer className="w-4 h-4 text-blue-500" />}
-                            {cat === "Limpeza" && <Sparkles className="w-4 h-4 text-purple-500" />}
-                            {cat === "Hortifruti" && <Apple className="w-4 h-4 text-red-500" />}
-                            {(cat === "Outros" || !["Mercearia", "Bebidas", "Limpeza", "Hortifruti"].includes(cat)) && <FileText className="w-4 h-4 text-slate-400" />}
-                            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">{cat}</h4>
+                         <div className="flex items-center gap-2 mb-3">
+                            {cat === "Mercearia" && <Coffee className="w-5 h-5 text-amber-600" />}
+                            {cat === "Bebidas" && <Beer className="w-5 h-5 text-blue-500" />}
+                            {cat === "Limpeza" && <Sparkles className="w-5 h-5 text-purple-500" />}
+                            {cat === "Hortifruti" && <Apple className="w-5 h-5 text-red-500" />}
+                            {(cat === "Outros" || !["Mercearia", "Bebidas", "Limpeza", "Hortifruti"].includes(cat)) && <FileText className="w-5 h-5 text-slate-400" />}
+                            <h4 className="text-sm font-bold text-slate-600 uppercase tracking-wider">{cat}</h4>
                          </div>
-                         <div className="space-y-3 pl-2 border-l-2 border-slate-100">
+                         <div className="space-y-4 pl-2 border-l-2 border-slate-100">
                             {groupedProducts[cat].map((prod, idx) => (
                               <ProductRow 
                                 key={idx}
@@ -223,11 +223,11 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
                   href={getMarketLink(market)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-600 font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2 group/btn"
+                  className="w-full bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-700 font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 group/btn text-base"
                 >
-                  <ImageIcon className="w-4 h-4" />
+                  <ImageIcon className="w-5 h-5" />
                   Visualizar Folheto
-                  <ExternalLink className="w-3 h-3 opacity-50 group-hover/btn:opacity-100 transition-opacity" />
+                  <ExternalLink className="w-4 h-4 opacity-50 group-hover/btn:opacity-100 transition-opacity" />
                 </a>
               </div>
              );
@@ -238,7 +238,7 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
         {/* Grounding Sources Section */}
         {sources.length > 0 && (
           <div className="mt-12 max-w-4xl mx-auto border-t border-slate-100 pt-8 pb-12">
-             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+             <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                <Globe className="w-4 h-4" />
                Fontes dos dados
              </h4>
@@ -264,17 +264,25 @@ export const SearchResultsPage: React.FC<SearchResultsPageProps> = ({ searchLoca
   );
 };
 
-const ProductRow = ({ name, price, oldPrice, isMedium, isExpensive }: { name: string, price: string, oldPrice?: string, isMedium?: boolean, isExpensive?: boolean }) => {
+interface ProductRowProps {
+  name: string;
+  price: string;
+  oldPrice?: string;
+  isMedium?: boolean;
+  isExpensive?: boolean;
+}
+
+const ProductRow: React.FC<ProductRowProps> = ({ name, price, oldPrice, isMedium, isExpensive }) => {
   let priceColor = "text-emerald-600";
   if (isMedium) priceColor = "text-emerald-700";
   if (isExpensive) priceColor = "text-emerald-800";
 
   return (
-    <div className="border-b border-slate-50 pb-2 last:border-0 last:pb-0">
-      <p className="text-sm font-medium text-slate-700 mb-0.5 line-clamp-2 leading-snug">{name}</p>
+    <div className="border-b border-slate-50 pb-3 last:border-0 last:pb-0">
+      <p className="text-base font-medium text-slate-700 mb-1 line-clamp-2 leading-snug">{name}</p>
       <div className="flex items-baseline gap-2">
-        <span className={`font-bold text-base ${priceColor}`}>R$ {price}</span>
-        {oldPrice && <span className="text-xs text-slate-400 line-through decoration-slate-300">R$ {oldPrice}</span>}
+        <span className={`font-bold text-lg ${priceColor}`}>R$ {price}</span>
+        {oldPrice && <span className="text-sm text-slate-400 line-through decoration-slate-300">R$ {oldPrice}</span>}
       </div>
     </div>
   );

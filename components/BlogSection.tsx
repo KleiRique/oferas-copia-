@@ -5,7 +5,7 @@ import { BlogPost } from '../types';
 export const blogPosts: BlogPost[] = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1580913428706-c311ab527ebc?auto=format&fit=crop&q=80&w=800", // Shopping carts
+    image: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&q=80&w=800", // Reliable shopping cart image
     category: "Dicas",
     date: "15 Nov 2025",
     title: "Como Economizar até 40% nas Compras do Mês",
@@ -32,7 +32,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=800", // Fresh produce
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800", // Fresh produce market image
     category: "Guias",
     date: "12 Nov 2025",
     title: "Os Melhores Dias para Ir ao Supermercado",
